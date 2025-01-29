@@ -6,14 +6,24 @@ markdown
 
 ## Usage:
 To generate markdown file inside `content` folder 
-```$ python buildsite.py new <folder>/<filename>.md```
+
+```
+$ python buildsite.py new <folder>/<filename>.md
+```
 
 example:
-```$ python buildsite.py new foo/bar.md```
+
+```
+$ python buildsite.py new foo/bar.md
+```
+
 This will create file named `bar.md` inside folder `foo`
 
 To generate the HTML file 
-```$ python buildsite.py generate```
+```
+$ python buildsite.py generate
+```
+
 This will convert all markdown file under `content` folder and also copy CSS, JS or whatever in `src` then put them inside `public` folder
 
 Note: *ALL files* under `src` will be put in the root folder of `public`
