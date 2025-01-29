@@ -117,9 +117,15 @@ def process_directory(content_dir, public_dir, config):
                 convert_md_to_html(md_file_path, html_file_path, config)
 
 def copy_src_to_public(src_dir, public_dir):
-    if os.path.exists(public_dir):
-        shutil.rmtree(public_dir)
-    shutil.copytree(src_dir, public_dir)
+    if not os.path.exists(public_dir):
+        os.makedirs(public_dir)
+    for item in os.listdir(src_dir):
+        s = os.path.join(src_dir, item)
+        d = os.path.join(public_dir, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, dirs_exist_ok=True)
+        else:
+            shutil.copy2(s, d)
 
 if __name__ == "__main__":
     
