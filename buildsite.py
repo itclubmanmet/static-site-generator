@@ -85,11 +85,19 @@ def convert_md_to_html(md_file_path, html_file_path, config):
                                         start = line.find('<h1>') + 4
                                         end = line.find('</h1>')
                                         return line[start:end].strip()
+                                    
+                        def extract_timestamp_from_html(html_file_path):
+                            with open(html_file_path, 'r', encoding='utf-8') as html_file:
+                                for line in html_file:
+                                    if '<h3>' in line:
+                                        start = line.find('<h3>') + 4
+                                        end = line.find('</h3>')
+                                        return line[start:end].strip()
 
                         news_file_path = os.path.join(root, file)
                         relative_path = os.path.relpath(news_file_path, news_dir)
                         title_path = './public/content/news/' + relative_path
-                        news_items.append(f'<li><a href="news/{relative_path}">{extract_title_from_html(title_path)}</a></li>')
+                        news_items.append(f'<li><a href="news/{relative_path}"><b>{extract_title_from_html(title_path)}</b><br>{extract_timestamp_from_html(title_path)}</a></li>')
                         
             with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
                 news_template_content = news_template_file.read()
@@ -120,8 +128,22 @@ def copy_src_to_public(src_dir, public_dir):
     if not os.path.exists(public_dir):
         os.makedirs(public_dir)
     for item in os.listdir(src_dir):
+        print(f'Copying : {item}')
         s = os.path.join(src_dir, item)
         d = os.path.join(public_dir, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, dirs_exist_ok=True)
+        else:
+            shutil.copy2(s, d)
+
+def copy_img_to_public(img_dir, public_dir):
+    public_img_dir = os.path.join(public_dir, 'img')
+    if not os.path.exists(public_img_dir):
+        os.makedirs(public_img_dir)
+    for item in os.listdir(img_dir):
+        print(f'Copying : {item}')
+        s = os.path.join(img_dir, item)
+        d = os.path.join(public_img_dir, item)
         if os.path.isdir(s):
             shutil.copytree(s, d, dirs_exist_ok=True)
         else:
@@ -136,7 +158,7 @@ if __name__ == "__main__":
         md_file_path = os.path.join('./content', md_file_path)
         os.makedirs(os.path.dirname(md_file_path), exist_ok=True)
         with open(md_file_path, 'w', encoding='utf-8') as md_file:
-            md_file.write(f'# New Markdown File\n{timestamp}\n\nContent goes here.')
+            md_file.write(f'# New Markdown File\n### {timestamp}\n\nContent goes here.')
 
     if len(sys.argv) > 1:
         if sys.argv[1] == 'generate':
@@ -144,9 +166,11 @@ if __name__ == "__main__":
             content_dir = './content'
             public_dir = './public'
             src_dir = './src'
+            img_dir = './img'
             config_file_path = './config.txt'
             config = read_config(config_file_path)
             copy_src_to_public(src_dir, public_dir)
+            copy_img_to_public(img_dir, public_dir)
             process_directory(content_dir, public_dir, config)
             end_time = time.time()
             print(f"Time taken: {end_time - start_time:.2f} seconds")
