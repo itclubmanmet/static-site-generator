@@ -15,7 +15,7 @@ Then, clone this repository to your desired path and change directory to the clo
 
 ```
 ~ $ git clone https://github.com/itclubmanmet/static-site-generator.git
-~ $ cd static-site-builder
+~ $ cd static-site-generator
 ```
 
 NOTE: If you need to, you can create virtual environment for Python

@@ -3,3 +3,4 @@ content/*
 src/*
 public
 img/*
+.gitmodules
