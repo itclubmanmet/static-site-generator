@@ -14,7 +14,7 @@ Install Python, check Python website for installation guide on your Operating Sy
 Then, clone this repository to your desired path and change directory to the cloned repository folder
 
 ```
-~ $ git clone https://github.com/itclubmanmet/static-site-builder.git
+~ $ git clone https://github.com/itclubmanmet/static-site-generator.git
 ~ $ cd static-site-builder
 ```
 
