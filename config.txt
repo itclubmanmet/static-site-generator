@@ -1,1 +1,2 @@
-Title=New Site
+Title=newsite
+file-with-date=0

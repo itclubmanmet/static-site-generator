@@ -1,25 +1,57 @@
-# Static Site Builder
-Static site builder tailored for IT Club MAN's Website
+# IT Club's Static Site Generator
+Static Site Generator tailored for IT Club MAN's Website<br>
+
+
+## Requirement :
+- Python 3
 
 ## Dependencies :
 markdown
 
+## Installation : 
+Install Python, check Python website for installation guide on your Operating System.
+
+Then, clone this repository to your desired path and change directory to the cloned repository folder
+
+```
+~ $ git clone https://github.com/itclubmanmet/static-site-builder.git
+~ $ cd static-site-builder
+```
+
+NOTE: If you need to, you can create virtual environment for Python
+
 ## Usage:
-To generate markdown file inside `content` folder 
+To generate markdown file inside `content` folder <br>
+
+```
+$ python buildsite.py new <filename>.md
+```
+
+This will create a file under `content` folder
+
+```
+.
+└── content
+    └── <filename>.md
+```
+
+You can also make a file inside a folder by adding path to that file
 
 ```
 $ python buildsite.py new <folder>/<filename>.md
 ```
 
-example:
+This will create file named `<filename>.md` inside folder `<folder>`
 
 ```
-$ python buildsite.py new foo/bar.md
+.
+└── content
+    └── <folder>
+        └── <filename>.md
 ```
-
-This will create file named `bar.md` inside folder `foo`
 
 To generate the HTML file 
+
 ```
 $ python buildsite.py generate
 ```
@@ -30,7 +62,8 @@ Note: *ALL files* under `src` will be put in the root folder of `public`
 
 ## Configuration
 
-Inside `config.txt`, you can set `Title`. That's it as of right now<br>
+Inside `config.txt`, you can set `Title` and `file-with-date`.<br>
+`file-with-date` will add date to the newly made markdown file<br>
 I mean, you could just modify the template html inside *template* and `buildsite.py` to add more config
 
 ## File structure

@@ -101,7 +101,7 @@ def convert_md_to_html(md_file_path, html_file_path, config):
                         
             with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
                 news_template_content = news_template_file.read()
-                news_items = [item for item in news_items if '9999-dummy.html' not in item] # Remove dummy news items
+                news_items = [item for item in news_items if 'zzzzz-dummy.html' not in item] # Remove dummy news items
                 news_items.sort(key=lambda x: x.split('news/')[1].split('.html')[0], reverse=True)
                 news_list = '\n'.join(news_items)
                 news_html_content = news_template_content.replace('{{ news_list }}', news_list)
@@ -174,15 +174,22 @@ if __name__ == "__main__":
             process_directory(content_dir, public_dir, config)
             end_time = time.time()
             print(f"Time taken: {end_time - start_time:.2f} seconds")
-        else:
-            if sys.argv[1] == 'new':
+
+        elif sys.argv[1] == 'new':
                 if len(sys.argv) > 2:
                     md_file_path = sys.argv[2]
                     if md_file_path.endswith('.md'):
-                        create_md_file(md_file_path)
+                        config = read_config('./config.txt')
+                        date = ''
+                        if config.get('file-with-date') == '1':
+                            date = datetime.now().strftime('%Y%m%d') + '-'
+                        create_md_file(f'{date + md_file_path}')
                     else:
                         print("Error: The specified file must have a .md extension.")
                 else:
                     print("Error: No file path specified.")
+        else: 
+            print("Error: Invalid arguments. Use 'generate' to build the site or 'new' to create a new markdown file.")
+
     else:
         print("Error: Invalid arguments. Use 'generate' to build the site or 'new' to create a new markdown file.")
