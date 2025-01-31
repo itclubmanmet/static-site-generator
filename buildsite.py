@@ -36,6 +36,7 @@ def convert_md_to_html(md_file_path, html_file_path, config):
 
         relative_path = calculate_relative_path(html_file_path, 'public')
         head_content = head_content.replace('{{ style }}', f'<link href="{relative_path}style.css" rel="stylesheet">')
+        head_content = head_content.replace('{{ icon }}', f'<link rel="icon" type="image/x-icon" href="{relative_path}img/term.ico">')
         
     with open('template/header.html', 'r', encoding='utf-8') as header_file:
         header_content = header_file.read()
@@ -173,7 +174,7 @@ if __name__ == "__main__":
             copy_img_to_public(img_dir, public_dir)
             process_directory(content_dir, public_dir, config)
             end_time = time.time()
-            print(f"Time taken: {end_time - start_time:.2f} seconds")
+            print(f"Time taken  : {end_time - start_time:.2f} seconds")
 
         elif sys.argv[1] == 'new':
                 if len(sys.argv) > 2:

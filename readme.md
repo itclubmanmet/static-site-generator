@@ -1,7 +1,6 @@
 # IT Club's Static Site Generator
 Static Site Generator tailored for IT Club MAN's Website<br>
 
-
 ## Requirement :
 - Python 3
 

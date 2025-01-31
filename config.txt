@@ -1,2 +1,2 @@
-Title=newsite
+Title=IT Club
 file-with-date=0

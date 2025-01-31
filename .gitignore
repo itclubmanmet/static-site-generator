@@ -1,6 +1,8 @@
 env
+env_win
 content/*
 src/*
 public
 img/*
 .gitmodules
+backup
