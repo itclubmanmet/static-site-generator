@@ -62,7 +62,7 @@ Note: *ALL files* under `src` will be put in the root folder of `public`
 ## Configuration
 
 Inside `config.txt`, you can set `Title` and `file-with-date`.<br>
-`file-with-date` will add date to the newly made markdown file<br>
+`file-with-date` will add date to the newly made markdown file, just an experiment really<br>
 I mean, you could just modify the template html inside *template* and `buildsite.py` to add more config
 
 ## File structure
