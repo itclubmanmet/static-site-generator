@@ -37,7 +37,7 @@ This will create a file under `content` folder
 You can also make a file inside a folder by adding path to that file
 
 ```
-$ python buildsite.py new <folder>/<filename>.md
+$ python buildsite.py new <folder> <filename>.md
 ```
 
 This will create file named `<filename>.md` inside folder `<folder>`
@@ -47,6 +47,13 @@ This will create file named `<filename>.md` inside folder `<folder>`
 └── content
     └── <folder>
         └── <filename>.md
+```
+
+By default, newly made markdown file will contain the following
+
+```
+# New Markdown File
+### { Timestamp } 
 ```
 
 To generate the HTML file 
@@ -94,6 +101,8 @@ reside after running the `buildsite.py generate`
 - `template` folder is where the templates are located like the base, head, body, etc.
 - `src` folder is where the script and stylesheet are, this folder will be copied to `./public/`
 - `content` folder is where the markdowns are stored.
+
+also, if you make `./content/content/news` folder, it will make a special file `news.html` in `./public/content` after you generate the site. 
 
 Though i just explained that `src` is for storing script and styesheet, i use it to store the base of my website such as
 `index.html`, `news.html`, `about.html` because it has different layout than the template. 

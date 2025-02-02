@@ -57,13 +57,16 @@ def convert_md_to_html(md_file_path, html_file_path, config):
         script_content = script_content.replace('{{ script_src }}', f'<script src="{relative_path}script.js"></script>')
         # !! JAVASCRIPT MUST BE IN THE ROOT OF ./src !!
     
+    with open('template/footer.html', 'r', encoding='utf-8') as footer_file:
+        footer_content = footer_file.read()
+
     with open('template/base.html', 'r', encoding='utf-8') as base_file:
         base_content = base_file.read()
     
     final_content = (base_content.replace('{{ head }}', head_content)
                                   .replace('{{ header }}', header_content)
                                   .replace('{{ body }}', body_content)
-                                  .replace('{{ footer }}', f'<footer id="footer">\n<p>IT Club MAN 1 Metro<br>\n<a href="mailto:itclubmanmet@gmail.com">Email IT Club MAN 1 Metro</a><br>\n<a href="https://www.instagram.com/itclub_mansametro/">Instagram IT Club</a></p></footer>')
+                                  .replace('{{ footer }}', footer_content)
                                   .replace('{{ script }}', script_content)
                     )
     
@@ -73,6 +76,7 @@ def convert_md_to_html(md_file_path, html_file_path, config):
         print(f'Writing : {html_file_path}')
 
         def generate_news_html(news_dir, news_template_path, output_path):
+            # brace for if for else chain !!!!1!111!!
             news_items = []
             for root, _, files in os.walk(news_dir):
                 for file in files:
@@ -94,14 +98,25 @@ def convert_md_to_html(md_file_path, html_file_path, config):
                                         end = line.find('</h3>')
                                         return line[start:end].strip()
 
+                        def extract_image_from_html(html_file_path):
+                            with open(html_file_path, 'r', encoding='utf-8') as html_file:
+                                for line in html_file:
+                                    if '<img alt="" src="' in line:
+                                        start = line.find('<img alt="" src="') + 17
+                                        end = line.find('"', start)
+                                        image_path = line[start:end].strip()
+                                        if image_path.startswith('../'):
+                                            image_path = image_path[3:]
+                                        return image_path
+                                    
                         news_file_path = os.path.join(root, file)
                         relative_path = os.path.relpath(news_file_path, news_dir)
                         title_path = './public/content/news/' + relative_path
-                        news_items.append(f'<li><a href="news/{relative_path}"><b>{extract_title_from_html(title_path)}</b><br>{extract_timestamp_from_html(title_path)}</a></li>')
-                        
+                        news_items.append(f'<div class="news" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url({extract_image_from_html(news_file_path)}); background-size: cover;"><a href="news/{relative_path}"><b>{extract_title_from_html(title_path)}</b><br>{extract_timestamp_from_html(title_path)}</a></div>')
+                        print(extract_title_from_html(title_path))
             with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
                 news_template_content = news_template_file.read()
-                news_items = [item for item in news_items if '9999999-dummy.html' not in item] # Remove dummy news items
+                news_items = [item for item in news_items if 'y.html' not in item] # Remove dummy news items
                 news_items.sort(key=lambda x: x.split('news/')[1].split('.html')[0], reverse=True)
                 news_list = '\n'.join(news_items)
                 news_html_content = news_template_content.replace('{{ news_list }}', news_list)
@@ -177,19 +192,23 @@ if __name__ == "__main__":
 
         elif sys.argv[1] == 'new':
                 if len(sys.argv) > 2:
-                    md_file_path = sys.argv[2]
+                    folder = sys.argv[2]
+                    if folder.endswith('/'):
+                        folder = folder[:-1]
+                    md_file_path = os.path.join(folder, sys.argv[3])
                     if md_file_path.endswith('.md'):
                         config = read_config('./config.txt')
                         date = ''
                         if config.get('file-with-date') == '1':
                             date = datetime.now().strftime('%Y%m%d') + '-'
-                        create_md_file(f'{date + md_file_path}')
+                            create_md_file(f'{folder}/{date}{sys.argv[3]}')
+                            print(f"New file created: {folder}/{date}{sys.argv[3]}")
+                        else:
+                            create_md_file(md_file_path)
+                            print(f"New file created: {md_file_path}")
                     else:
                         print("Error: The specified file must have a .md extension.")
                 else:
                     print("Error: No file path specified.")
         else: 
             print("Error: Invalid arguments. Use 'generate' to build the site or 'new' to create a new markdown file.")
-
-    else:
-        print("Error: Invalid arguments. Use 'generate' to build the site or 'new' to create a new markdown file.")
