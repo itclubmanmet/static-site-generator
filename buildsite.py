@@ -113,7 +113,7 @@ def convert_md_to_html(md_file_path, html_file_path, config):
                         relative_path = os.path.relpath(news_file_path, news_dir)
                         title_path = './public/content/news/' + relative_path
                         news_items.append(f'<div class="news" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url({extract_image_from_html(news_file_path)}); background-size: cover;"><a href="news/{relative_path}"><b>{extract_title_from_html(title_path)}</b><br>{extract_timestamp_from_html(title_path)}</a></div>')
-                        print(extract_title_from_html(title_path))
+                        print(f'Title   : {extract_title_from_html(title_path)}')
             with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
                 news_template_content = news_template_file.read()
                 news_items = [item for item in news_items if 'y.html' not in item] # Remove dummy news items
@@ -167,13 +167,13 @@ def copy_img_to_public(img_dir, public_dir):
 if __name__ == "__main__":
     
 
-    def create_md_file(md_file_path):
+    def create_md_file(md_file_path, title):
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         md_file_path = os.path.join('./content', md_file_path)
         os.makedirs(os.path.dirname(md_file_path), exist_ok=True)
         with open(md_file_path, 'w', encoding='utf-8') as md_file:
-            md_file.write(f'# New Markdown File\n### {timestamp}\n\nContent goes here.')
+            md_file.write(f'# {title}\n### {timestamp}\n\nContent goes here.')
 
     if len(sys.argv) > 1:
         if sys.argv[1] == 'generate':
@@ -198,10 +198,11 @@ if __name__ == "__main__":
                     md_file_path = os.path.join(folder, sys.argv[3])
                     if md_file_path.endswith('.md'):
                         config = read_config('./config.txt')
+                        title = sys.argv[3][:-3]
                         date = ''
                         if config.get('file-with-date') == '1':
                             date = datetime.now().strftime('%Y%m%d') + '-'
-                            create_md_file(f'{folder}/{date}{sys.argv[3]}')
+                            create_md_file(f'{folder}/{date}{sys.argv[3]}', title)
                             print(f"New file created: {folder}/{date}{sys.argv[3]}")
                         else:
                             create_md_file(md_file_path)

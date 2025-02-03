@@ -52,7 +52,7 @@ This will create file named `<filename>.md` inside folder `<folder>`
 By default, newly made markdown file will contain the following
 
 ```
-# New Markdown File
+# { filename }
 ### { Timestamp } 
 ```
 
