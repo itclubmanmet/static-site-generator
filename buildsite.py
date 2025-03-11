@@ -175,20 +175,23 @@ if __name__ == "__main__":
         with open(md_file_path, 'w', encoding='utf-8') as md_file:
             md_file.write(f'# {title}\n### {timestamp}\n\nContent goes here.')
 
+    def generate():
+        start_time = time.time()
+        content_dir = './content'
+        public_dir = './public'
+        src_dir = './src'
+        img_dir = './img'
+        config_file_path = './config.txt'
+        config = read_config(config_file_path)
+        copy_src_to_public(src_dir, public_dir)
+        copy_img_to_public(img_dir, public_dir)
+        process_directory(content_dir, public_dir, config)
+        end_time = time.time()
+        print(f"Time taken: {end_time - start_time:.2f} seconds")
+
     if len(sys.argv) > 1:
         if sys.argv[1] == 'generate':
-            start_time = time.time()
-            content_dir = './content'
-            public_dir = './public'
-            src_dir = './src'
-            img_dir = './img'
-            config_file_path = './config.txt'
-            config = read_config(config_file_path)
-            copy_src_to_public(src_dir, public_dir)
-            copy_img_to_public(img_dir, public_dir)
-            process_directory(content_dir, public_dir, config)
-            end_time = time.time()
-            print(f"Time taken: {end_time - start_time:.2f} seconds")
+            generate()
 
         elif sys.argv[1] == 'new':
                 if len(sys.argv) > 2:

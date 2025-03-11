@@ -64,7 +64,7 @@ $ python buildsite.py generate
 
 This will convert all markdown file under `content` folder and also copy CSS, JS or whatever in `src` then put them inside `public` folder
 
-Note: *ALL files* under `src` will be put in the root folder of `public`
+Note: *ALL files* under `src` will be put in the root folder of `public` and oh ANY FILE WITH EXTENSION OTHER THAN .md WILL BE IGNORED AND NOT COPIED OVER TO `public`
 
 ## Configuration
 
@@ -99,7 +99,7 @@ Though not uploaded to this repository, you should add these folder:
 reside after running the `buildsite.py generate`
 - `img` folder is where the images are stored, when running the script it will be copied to `./public/img/`
 - `template` folder is where the templates are located like the base, head, body, etc.
-- `src` folder is where the script and stylesheet are, this folder will be copied to `./public/`
+- `src` folder is where the index HTMl, script, and stylesheet are, this folder will be copied to `./public/`
 - `content` folder is where the markdowns are stored.
 
 Though i just explained that `src` is for storing script and styesheet, i use it to store the base of my website such as
