@@ -190,7 +190,8 @@ if __name__ == "__main__":
         print(f"Time taken: {end_time - start_time:.2f} seconds")
 
     if len(sys.argv) > 1:
-        if sys.argv[1] == 'generate':
+        
+        if sys.argv[1] == 'generate':  
             generate()
 
         elif sys.argv[1] == 'new':

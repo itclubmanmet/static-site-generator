@@ -13,11 +13,16 @@ Install Python, check Python website for installation guide on your Operating Sy
 Then, clone this repository to your desired path and change directory to the cloned repository folder
 
 ```
-~ $ git clone https://github.com/itclubmanmet/static-site-generator.git
-~ $ cd static-site-generator
+$ git clone https://github.com/itclubmanmet/static-site-generator.git
+$ cd static-site-generator
 ```
 
-NOTE: If you need to, you can create virtual environment for Python
+To install the dependency, run this command.
+NOTE: If you need to, you can create virtual environment for your Python installation.
+
+```
+$ pip install -r requirements.txt
+```
 
 ## Usage:
 To generate markdown file inside `content` folder <br>
