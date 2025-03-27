@@ -3,9 +3,12 @@ Static Site Generator tailored for IT Club MAN's Website<br>
 
 ## Requirement :
 - Python 3
+- UNIX or UNIX-like Operating System (not tested on Windows yet)
 
 ## Dependencies :
 markdown
+
+(yes, it only need single dependencies from pip)
 
 ## Installation : 
 Install Python, check Python website for installation guide on your Operating System.
@@ -84,12 +87,17 @@ Though not uploaded to this repository, you should add these folder:
 ```
 .
 ├── buildsite.py
+├── main.py
 ├── config.txt
 ├── content
 ├── public
 ├── src
 ├── img
 ├── template
+│   ├── design
+│   │   ├── index.html
+│   │   ├── style.css
+│   │   └── script.js
 │   ├── base.html
 │   ├── body.html
 │   ├── footer.html
@@ -97,14 +105,15 @@ Though not uploaded to this repository, you should add these folder:
 │   ├── head.html
 │   ├── news.html
 │   └── script.html
+├── requirements.txt
 └── readme.md
 ```
 
-- `public` folder is where all converted markdown in `content`, assets in `src`, images in `img` will 
+- `public` folder is where all converted markdown in `content`, assets in `src`, and images in `img` will 
 reside after running the `buildsite.py generate`
-- `img` folder is where the images are stored, when running the script it will be copied to `./public/img/`
-- `template` folder is where the templates are located like the base, head, body, etc.
-- `src` folder is where the index HTMl, script, and stylesheet are, this folder will be copied to `./public/`
+- `img` folder is where the images are stored, when running the script it will be copied to `./public/img/`. 
+- `template` folder is where the templates are located like the base, head, body, and also if `src` don't have `index.html`, it will copy `index.html`, stylesheet, and script from `template` instead
+- `src` folder is where the index HTMl, script, and stylesheet are, this folder will be copied to `./public/` (MANDATORY!)
 - `content` folder is where the markdowns are stored.
 
 Though i just explained that `src` is for storing script and styesheet, i use it to store the base of my website such as
