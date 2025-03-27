@@ -104,7 +104,6 @@ def generate_news_html(news_dir, news_template_path, output_path):
                     news_file_path = os.path.join(news_dir, item)
                     relative_path = os.path.relpath(news_file_path, news_dir)
                     metadata = extract_from_html(news_file_path)
-                    print(f'Title: {metadata[0]}, {metadata[1]}, {metadata[2]}, {news_file_path}')
                     news_items.append(f'<div class="news" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url({metadata[2]}); background-size: cover;"><a href="news/{relative_path}"><b>{metadata[0]}</b><br>{metadata[1]}</a></div>')
 
             with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
