@@ -70,15 +70,12 @@ To generate the HTML file
 $ python buildsite.py generate
 ```
 
-This will convert all markdown file under `content` folder and also copy CSS, JS or whatever in `src` then put them inside `public` folder
-
-Note: *ALL files* under `src` will be put in the root folder of `public` and oh ANY FILE WITH EXTENSION OTHER THAN .md WILL BE IGNORED AND NOT COPIED OVER TO `public`
-
 ## Configuration
 
-Inside `config.txt`, you can set `Title` and `file-with-date`.<br>
-`file-with-date` will add date to the newly made markdown file, just an experiment really<br>
-I mean, you could just modify the template html inside *template* and `buildsite.py` to add more config
+There's 3 configuration you can change it `config.txt`
+- `Title` (string), Change the title on the website tab
+- `file-with-date` (boolean), generate new markdown file with date at the front
+- `generate-news` (boolean), choose to generate `news.html` or not
 
 ## File structure
 
@@ -113,10 +110,6 @@ Though not uploaded to this repository, you should add these folder:
 reside after running the `buildsite.py generate`
 - `img` folder is where the images are stored, when running the script it will be copied to `./public/img/`. 
 - `template` folder is where the templates are located like the base, head, body, and also if `src` don't have `index.html`, it will copy `index.html`, stylesheet, and script from `template` instead
-- `src` folder is where the index HTMl, script, and stylesheet are, this folder will be copied to `./public/` (MANDATORY!)
+- `src` folder is where the index HTMl, script, and stylesheet are, this folder will be copied to `./public/`, if there's no `index.html` in it then the program will copy from `template` instead
 - `content` folder is where the markdowns are stored.
 
-Though i just explained that `src` is for storing script and styesheet, i use it to store the base of my website such as
-`index.html`, `news.html`, `about.html` because it has different layout than the template.
-
-also, if you make `./content/content/news` folder, it will make a special file `news.html` in `./public/content` after you generate the site and its content will be listed in `news.html`

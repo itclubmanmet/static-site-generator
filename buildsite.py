@@ -69,33 +69,45 @@ def convert_md_to_html(md_file_path, html_file_path, config):
 
 def extract_from_html(news_file_path):
     with open(news_file_path, 'r', encoding='utf-8') as html_file:
-        judul = ''
-        timestamp = ''
-        gambar = ''
+        judul = []
+        timestamp = []
+        gambar = []
         for line in html_file:
             if '<h1>' in line:
                 start = line.find('<h1>') + 4
                 end = line.find('</h1>')
-                judul = line[start:end].strip()
-        
+                judul_berita = line[start:end].strip()
+                judul.append(judul_berita)
+
             if '<h3>' in line:
                 start = line.find('<h3>') + 4
                 end = line.find('</h3>')
-                timestamp = line[start:end].strip()
-
+                timestamp_berita = line[start:end].strip()
+                timestamp.append(timestamp_berita)
             if '<img alt="" src="' in line:
                 start = line.find('<img alt="" src="') + 17
                 end = line.find('"', start)
                 image_path = line[start:end].strip()
                 if image_path.startswith('../'):
                     image_path = image_path[3:]
-                gambar = image_path
+                gambar.append(image_path)
+
+        if not gambar:
+            gambar.append('../img/default.png')
+        if not timestamp:
+            timestamp.append('No Timestamp')
+        if not judul:
+            judul.append('No Title')
         return judul, timestamp, gambar
                             
-def generate_news_html(news_dir, news_template_path, output_path):
+def generate_news_html(news_dir, news_template_path, output_path, gennews):
     # brace for if for else chain !!!!1!111!!
     news_items = []
-            
+
+    if gennews == "0" or gennews == "false":
+        print(f'{color.YELLOW}WARN{color.RESET}    : News generation is disabled in config.txt')
+        return
+    
     with os.scandir(news_dir) as entries:
         for entry in entries:
             if entry.is_file():
@@ -104,18 +116,19 @@ def generate_news_html(news_dir, news_template_path, output_path):
                     news_file_path = os.path.join(news_dir, item)
                     relative_path = os.path.relpath(news_file_path, news_dir)
                     metadata = extract_from_html(news_file_path)
-                    news_items.append(f'<div class="news" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url({metadata[2]}); background-size: cover;"><a href="news/{relative_path}"><b>{metadata[0]}</b><br>{metadata[1]}</a></div>')
-
-            with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
+                    news_items.append(f'<div class="news" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url({metadata[2][0]}); background-size: cover;"><a href="./news/{relative_path}"><b>{metadata[0][0]}</b><br>{metadata[1][0]}</a></div>')
+        
+        with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
                 news_template_content = news_template_file.read()
-                news_items = [item for item in news_items if 'y.html' not in item] # Remove dummy news items
+                # news_items = [item for item in news_items if 'y.html' not in item] # Deprecated
                 news_items.sort(key=lambda x: x.split('news/')[1].split('.html')[0], reverse=True)
                 news_list = '\n'.join(news_items)
                 news_html_content = news_template_content.replace('{{ news_list }}', news_list)
 
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
-            with open(output_path, 'w', encoding='utf-8') as news_html_file:
-                news_html_file.write(news_html_content)
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, 'w', encoding='utf-8') as news_html_file:
+            news_html_file.write(news_html_content)    
+
     
 def process_directory(content_dir, public_dir, config):
     for root, _, files in os.walk(content_dir):
@@ -201,11 +214,11 @@ if __name__ == "__main__":
         news_template_path = 'template/news.html'
         output_path = './public/content/news.html'
         config = read_config(config_file_path)
+        gennews = config.get("generate-news")
         copy_src_to_public(src_dir, public_dir, template_dir)
         copy_img_to_public(img_dir, public_dir)
         process_directory(content_dir, public_dir, config)
-
-        generate_news_html(news_dir, news_template_path, output_path)
+        generate_news_html(news_dir, news_template_path, output_path, gennews)
         end_time = time.time()
         print(f"Time taken: {(end_time - start_time) * 1000:.2f} ms")
 
@@ -224,7 +237,7 @@ if __name__ == "__main__":
                         config = read_config('./config.txt')
                         title = sys.argv[3][:-3]
                         date = ''
-                        if config.get('file-with-date') == '1':
+                        if config.get('file-with-date') == '1' or config.get('file-with-date') == 'true':
                             date = datetime.now().strftime('%Y%m%d') + '-'
                             create_md_file(f'{folder}/{date}{sys.argv[3]}', title)
                             print(f"{color.CYAN}New file created:{color.RESET} {folder}/{date}{sys.argv[3]}")
