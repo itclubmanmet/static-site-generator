@@ -1,3 +1,0 @@
-Title=IT Club
-file-with-date=1
-generate-news=1

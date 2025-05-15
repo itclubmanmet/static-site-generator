@@ -1,0 +1,14 @@
+[metadata]
+    Title = "IT Club"
+    description = "" 
+
+[tool-setting]
+    file-with-date = 1
+    content_dir = "./content"
+    public_dir = "./public"
+    src_dir = "./src"
+    img_dir = "./img"
+    template_dir = "./template/design"
+    news_dir = "./public/content/news"
+    news_template_path = "./template/news.html"
+    news_output_path = "./public/content/news.html"

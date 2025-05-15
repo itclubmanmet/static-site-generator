@@ -3,12 +3,11 @@ Static Site Generator tailored for IT Club MAN's Website<br>
 
 ## Requirement :
 - Python 3
-- UNIX or UNIX-like Operating System (not tested on Windows yet)
+- Any OS that is supported by Python
 
 ## Dependencies :
-markdown
-
-(yes, it only need single dependencies from pip)
+- markdown
+- toml
 
 ## Installation : 
 Install Python, check Python website for installation guide on your Operating System.
@@ -28,7 +27,7 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage:
-To generate markdown file inside `content` folder <br>
+To generate markdown file inside `content` folder
 
 ```
 $ python buildsite.py new <filename>.md
@@ -72,10 +71,23 @@ $ python buildsite.py generate
 
 ## Configuration
 
-There's 3 configuration you can change it `config.txt`
-- `Title` (string), Change the title on the website tab
-- `file-with-date` (boolean), generate new markdown file with date at the front
-- `generate-news` (boolean), choose to generate `news.html` or not
+```
+[metadata]
+    Title = "IT Club"
+    description = "" 
+    # as of right now, description does nothing
+
+[tool-setting]
+    file-with-date = 1
+    content_dir = "./content"
+    public_dir = "./public"
+    src_dir = "./src"
+    img_dir = "./img"
+    template_dir = "./template/design"
+    news_dir = "./public/content/news"
+    news_template_path = "./template/news.html"
+    news_output_path = "./public/content/news.html"
+```
 
 ## File structure
 
@@ -106,10 +118,10 @@ Though not uploaded to this repository, you should add these folder:
 └── readme.md
 ```
 
-- `public` folder is where all converted markdown in `content`, assets in `src`, and images in `img` will 
-reside after running the `buildsite.py generate`
-- `img` folder is where the images are stored, when running the script it will be copied to `./public/img/`. 
-- `template` folder is where the templates are located like the base, head, body, and also if `src` don't have `index.html`, it will copy `index.html`, stylesheet, and script from `template` instead
-- `src` folder is where the index HTMl, script, and stylesheet are, this folder will be copied to `./public/`, if there's no `index.html` in it then the program will copy from `template` instead
+- `public` folder is where all the converted markdown in `content`, assets in `src`, and images in `img` will go after running the `buildsite.py generate`
+- `img` contains image
+- `template` contains template to generate the site, it also contains the theme. 
+stylesheet, and script from `template` instead
+- `src` contains source if you're writing the index.html, script or stylesheet yourself.
 - `content` folder is where the markdowns are stored.
 
