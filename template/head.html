@@ -1,7 +1,22 @@
-<meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://itclubmanmet.github.io/{{ meta_image }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
-    {{ style }}
+    <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap"
+        rel="stylesheet">
+    <link href="{{ relpath }}style.css" rel="stylesheet">
+    <link rel="icon" href="{{ relpath }}img/icon.png">
     <title>{{ Title }}</title>
+</head>
+
+<header>
+    <ul class="topnav">
+        <li><a href="{{ relpath }}index.html">Home</a></li>
+        <li><a href="{{ relpath }}content/news.html">News</a></li>
+        <li><a href="{{ relpath }}content/gallery.html">Gallery</a></li>
+        <li><a href="{{ relpath }}content/about.html">About</a></li>
+    </ul>
+</header>
