@@ -268,8 +268,6 @@ if __name__ == "__main__":
             title = args[3]
             date = ""
 
-            config = read_config('./config.txt')
-
             if config.get('file-with-date'):
                 date = datetime.now().strftime('%Y%m%d') + '-'
             

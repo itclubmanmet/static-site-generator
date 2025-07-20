@@ -8,6 +8,7 @@ Static Site Generator tailored for IT Club MAN's Website<br>
 ## Dependencies :
 - markdown
 - toml
+- markdown_del_ins
 
 ## Installation : 
 Install Python, check Python website for installation guide on your Operating System.
@@ -20,7 +21,7 @@ $ cd static-site-generator
 ```
 
 To install the dependency, run this command.
-NOTE: If you need to, you can create virtual environment for your Python installation.
+NOTE: If you need to, you can create virtual environment for your Python installation. Arch Linux gets mad if you don't do this though..
 
 ```
 $ pip install -r requirements.txt
@@ -120,8 +121,7 @@ Though not uploaded to this repository, you should add these folder:
 
 - `public` folder is where all the converted markdown in `content`, assets in `src`, and images in `img` will go after running the `buildsite.py generate`
 - `img` contains image
-- `template` contains template to generate the site, it also contains the theme. 
-stylesheet, and script from `template` instead
+- `template` contains template to generate the site, it also contains the theme. If you don't provide any index, stylesheet, and script in `src` then it's going to pull template from `template/design` instead
 - `src` contains source if you're writing the index.html, script or stylesheet yourself.
 - `content` folder is where the markdowns are stored.
 
