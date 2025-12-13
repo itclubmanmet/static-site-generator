@@ -9,19 +9,21 @@ import sys
 from datetime import datetime
 import time
 import toml
+from typing import List, Tuple, Dict
 
-time_total = []
+time_total: List[str] = []
 
-def read_config(config_file_path):
-    with open(config_file_path, 'r', encoding='utf-8') as config_file:
-        config = toml.load(config_file)
+def readConfig(configPath: str) -> Dict[str, str]:
+    config: Dict[str, str] = {}
+    with open(configPath, 'r', encoding='utf-8') as configFile:
+        config = toml.load(configFile)
     return config
 
-def calculate_relative_path(html_file_path, public_dir):
-    depth = os.path.relpath(html_file_path, public_dir).count(os.sep)
+def calculateFolderRelPath(contentHtmlPath: str, publicDirPath: str) -> str:
+    depth = os.path.relpath(contentHtmlPath, publicDirPath).count(os.sep)
     return '../' * depth
 
-def convert_md_to_html(md_file_path, html_file_path, config):
+def processMarkdown(markdownPath: str, contentHtmlPath: str, config: Dict[str, str]) -> None:
     md = markdown.Markdown(extensions=[
         'markdown.extensions.extra',
         'markdown.extensions.codehilite',
@@ -32,50 +34,47 @@ def convert_md_to_html(md_file_path, html_file_path, config):
         'markdown_del_ins',
     ])
 
-    relative_path = calculate_relative_path(html_file_path, 'public')
-    with open(md_file_path, 'r', encoding='utf-8') as md_file:
-        md_content = md_file.read()
-        html_content = md.convert(md_content)
-        #print(f'{color.GREEN}[ R ]{color.RESET} : {md_file_path}')
+    relPath = calculateFolderRelPath(contentHtmlPath, 'public')
+    with open(markdownPath, 'r', encoding='utf-8') as mdFile:
+        mdFileContent = mdFile.read()
+        htmlContent = md.convert(mdFileContent)
     
     with open('template/head.html', 'r', encoding='utf-8') as head_file:
-        head_content = head_file.read()
-        meta_image = []
-        title = html_content.split('<h1 id="')[1].split('</h1>')[0].split('">')[1] if '<h1' in html_content else config.get('Title', '')
-        head_content = head_content.replace('{{ meta_image }}', f'{html_content.split("<img alt=\"\" src=\""+relative_path)[1].split("\"")[0]}' if '<img alt="" src="' in html_content else config.get('meta_image', 'img/default.png'))        
-        head_content = head_content.replace('{{ Title }}', title)
-        head_content = head_content.replace('{{ relpath }}', f'{relative_path}')
+        htmlContentHead = head_file.read()
+        title = htmlContent.split('<h1 id="')[1].split('</h1>')[0].split('">')[1] if '<h1' in htmlContent else config.get('Title', '')
+        htmlContentHead = htmlContentHead.replace('{{ meta_image }}', f'{htmlContent.split("<img alt=\"\" src=\""+relPath)[1].split("\"")[0]}' if '<img alt="" src="' in htmlContent else config.get('meta_image', 'img/default.png'))        
+        htmlContentHead = htmlContentHead.replace('{{ Title }}', title)
+        htmlContentHead = htmlContentHead.replace('{{ relpath }}', f'{relPath}')
 
-    with open('template/body.html', 'r', encoding='utf-8') as body_file:
-        body_content = body_file.read()
-        body_content = body_content.replace('{{ content }}', html_content)
+    with open('template/body.html', 'r', encoding='utf-8') as templateFileBody:
+        htmlContentBody = templateFileBody.read()
+        htmlContentBody = htmlContentBody.replace('{{ content }}', htmlContent)
 
-    with open('template/script.html', 'r', encoding='utf-8') as script_file:
-        script_content = script_file.read()
+    with open('template/script.html', 'r', encoding='utf-8') as templateFileScript:
+        htmlContentScript = templateFileScript.read()
 
-    with open('template/footer.html', 'r', encoding='utf-8') as footer_file:
-        footer_content = footer_file.read()
+    with open('template/footer.html', 'r', encoding='utf-8') as templateFileFooter:
+        htmlContentFooter = templateFileFooter.read()
 
     with open('template/base.html', 'r', encoding='utf-8') as base_file:
-        base_content = base_file.read()
+        htmlContentBase = base_file.read()
     
-    final_content = (base_content.replace('{{ head }}', head_content)
-                                  .replace('{{ body }}', body_content)
-                                  .replace('{{ footer }}', footer_content)
-                                  .replace('{{ script }}', script_content)
+    htmlContentProcessed = (htmlContentBase.replace('{{ head }}', htmlContentHead)
+                                  .replace('{{ body }}', htmlContentBody)
+                                  .replace('{{ footer }}', htmlContentFooter)
+                                  .replace('{{ script }}', htmlContentScript)
                     )
     
-    os.makedirs(os.path.dirname(html_file_path), exist_ok=True)
-    with open(html_file_path, 'w', encoding='utf-8') as final_html_file:
-        final_html_file.write(final_content)
-        print(f'{color.GREEN}[ >> ]{color.RESET} : {html_file_path}')
+    os.makedirs(os.path.dirname(contentHtmlPath), exist_ok=True)
+    with open(contentHtmlPath, 'w', encoding='utf-8') as htmlContentProcessedFile:
+        htmlContentProcessedFile.write(htmlContentProcessed)
 
-def extract_from_html(news_file_path):
-    with open(news_file_path, 'r', encoding='utf-8') as html_file:
+def extractHtmlMetadata(newsFilePath: str) -> Tuple[List[str], List[str], List[str]]:
+    with open(newsFilePath, 'r', encoding='utf-8') as html_file:
 
-        judul = []
-        timestamp = []
-        gambar = []
+        judul: List[str] = []
+        timestamp: List[str] = []
+        gambar: List[str] = []
         
         for line in html_file:
             if '<h1 id="' in line:
@@ -107,10 +106,10 @@ def extract_from_html(news_file_path):
             
         return judul, timestamp, gambar
                             
-def generate_news_html(news_dir, news_template_path, output_path):
+def generateNewsFile(news_dir: str, templateNewsFile: str, outputPath: str) -> None:
     start_time = time.time()
 
-    news_items = []
+    news_items: List[str] = []
     
     with os.scandir(news_dir) as entries:
         for entry in entries:
@@ -122,81 +121,77 @@ def generate_news_html(news_dir, news_template_path, output_path):
                     if item.startswith('index'):
                         continue
 
-                    news_file_path = os.path.join(news_dir, item)
-                    metadata = extract_from_html(news_file_path)
-                    relative_path = os.path.splitext(os.path.relpath(news_file_path, news_dir))[0]
-                    news_items.append(f'<div class="news" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url({metadata[2][0]}); background-size: cover;"><a href="news/{relative_path}"><b>{metadata[0][0]}</b><br>{metadata[1][0]}</a></div>')
+                    newsFilePath = os.path.join(news_dir, item)
+                    metadata = extractHtmlMetadata(newsFilePath)
+                    relPath = os.path.splitext(os.path.relpath(newsFilePath, news_dir))[0]
+                    news_items.append(f'<div class="news" style="background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.5)), url({metadata[2][0]}); background-size: cover;"><a href="news/{relPath}"><b>{metadata[0][0]}</b><br>{metadata[1][0]}</a></div>')
             
-    with open(news_template_path, 'r', encoding='utf-8') as news_template_file:
+    with open(templateNewsFile, 'r', encoding='utf-8') as news_template_file:
         news_template_content = news_template_file.read()
         news_items.sort(key=lambda x: x.split('news/')[1].split('.html')[0], reverse=True)
         news_list = '\n'.join(news_items)
-        news_html_content = news_template_content.replace('{{ news_list }}', news_list)
+        news_htmlContent = news_template_content.replace('{{ news_list }}', news_list)
 
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    with open(output_path, 'w', encoding='utf-8') as news_html_file:
-        news_html_file.write(news_html_content)
+    os.makedirs(os.path.dirname(outputPath), exist_ok=True)
+    with open(outputPath, 'w', encoding='utf-8') as news_html_file:
+        news_html_file.write(news_htmlContent)
 
     end_time = time.time()
     time_total.append(f"generate_news_to_html took {(end_time - start_time) * 1000:.2f} ms")
     
-def process_directory(content_dir, public_dir, config):
+def initDir(contentDirPath: str, publicDirPath: str, config: Dict[str, str]) -> None:
     start_time = time.time()
-    for root, _, files in os.walk(content_dir):
+    for root, _, files in os.walk(contentDirPath):
         for file in files:
             if file.endswith('.md'):
-                md_file_path = os.path.join(root, file)
-                relative_path = os.path.relpath(md_file_path, content_dir)
-                html_file_path = os.path.join(public_dir, os.path.splitext(relative_path)[0] + '.html')
-                convert_md_to_html(md_file_path, html_file_path, config)
+                markdownPath = os.path.join(root, file)
+                relPath = os.path.relpath(markdownPath, contentDirPath)
+                contentHtmlPath = os.path.join(publicDirPath, os.path.splitext(relPath)[0] + '.html')
+                processMarkdown(markdownPath, contentHtmlPath, config)
     
     end_time = time.time()
-    time_total.append(f"process_directory took {(end_time - start_time) * 1000:.2f} ms")
+    time_total.append(f"initDir took {(end_time - start_time) * 1000:.2f} ms")
 
-def copy_src_to_public(src_dir, public_dir, template_dir):
+def copySourceToPublic(sourceDirPath: str, publicDirPath: str, template_dir: str) -> None:
     start_time = time.time()
-    if not os.path.exists(public_dir):
-        os.makedirs(public_dir)
+    if not os.path.exists(publicDirPath):
+        os.makedirs(publicDirPath)
     
-    if 'index.html' in os.listdir(src_dir):
-        for item in os.listdir(src_dir):
-            print(f'{color.GREEN}[ -> ]{color.RESET}	: {item}')
-            s = os.path.join(src_dir, item)
-            d = os.path.join(public_dir, item)
+    if 'index.html' in os.listdir(sourceDirPath):
+        for item in os.listdir(sourceDirPath):
+            s = os.path.join(sourceDirPath, item)
+            d = os.path.join(publicDirPath, item)
             if os.path.isdir(s):
                 shutil.copytree(s, d, dirs_exist_ok=True)
             else:
                 shutil.copy2(s, d)
     else:
-        print(f'{color.YELLOW}[ !! ]{color.RESET} : ./src did not contain index.html, using template design instead')
         for item in os.listdir(template_dir):
-            print(f'[ -> ] : {template_dir}/{item} -> {public_dir}')
             s = os.path.join(template_dir, item)
-            d = os.path.join(public_dir, item)
+            d = os.path.join(publicDirPath, item)
             if os.path.isdir(s):
                 shutil.copytree(s, d, dirs_exist_ok=True)
             else:
                 shutil.copy2(s, d)
     end_time = time.time()
-    time_total.append(f"copy_src_to_public took {(end_time - start_time) * 1000:.2f} ms")
+    time_total.append(f"copySourceToPublic took {(end_time - start_time) * 1000:.2f} ms")
     
     
-def copy_img_to_public(img_dir, public_dir):
+def copyImageToPublic(img_dir: str, publicDirPath: str) -> None:
     start_time = time.time()
-    public_img_dir = os.path.join(public_dir, 'img')
+    public_img_dir = os.path.join(publicDirPath, 'img')
     
     if not os.path.exists(public_img_dir):
         os.makedirs(public_img_dir)
     
     list_public_img = os.listdir(public_img_dir)
-    exist = []
+    exist: List[str] = []
     for item in os.listdir(img_dir):
         if item in list_public_img:
             exist.append(item)
             continue
 
         else:
-            print(f'[ ~> ] : {item}')
             s = os.path.join(img_dir, item)
             d = os.path.join(public_img_dir, item)
             if os.path.isdir(s):
@@ -204,13 +199,12 @@ def copy_img_to_public(img_dir, public_dir):
             else:
                 shutil.copy2(s, d)
     
-    print(f'{color.YELLOW}[ !! ]{color.RESET} : {len(exist)} images already exist in public/img, skipping copy')
     end_time = time.time()
-    time_total.append(f"copy_img_to_public took {(end_time - start_time) * 1000:.2f} ms")
+    time_total.append(f"copyImageToPublic took {(end_time - start_time) * 1000:.2f} ms")
 
 if __name__ == "__main__":
 
-    config = read_config('./config.toml')
+    config = readConfig('./config.toml')
 
     class color:
         GREEN = '\033[92m'
@@ -222,65 +216,77 @@ if __name__ == "__main__":
         WHITE = '\033[97m'
         RESET = '\033[0m'
 
-    def create_md_file(md_file_path, title):
+    def createMarkdown(markdownPath: str, title: str) -> None:
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        md_file_path = os.path.join('./content', md_file_path + '.md')
-        os.makedirs(os.path.dirname(md_file_path), exist_ok=True)
-        with open(md_file_path, 'w', encoding='utf-8') as md_file:
-            md_file.write(f'# {title}\n### {timestamp}\n\nContent goes here.')
-        print(f"{color.CYAN}[ // ] :{color.RESET} Created {md_file_path}")
+        markdownPath = os.path.join('./content', markdownPath + '.md')
+        os.makedirs(os.path.dirname(markdownPath), exist_ok=True)
+        with open(markdownPath, 'w', encoding='utf-8') as mdFile:
+            mdFile.write(f'# {title}\n### {timestamp}\n\nContent goes here.')
 
-    def generate():
+    def generateSite() -> None:
         start_time = time.time()
-        copy_src_to_public(config.get('tool-setting').get('src_dir'), config.get('tool-setting').get('public_dir'), config.get('tool-setting').get('template_dir'))
-        copy_img_to_public(config.get('tool-setting').get('img_dir'), config.get('tool-setting').get('public_dir'))
-        process_directory(config.get('tool-setting').get('content_dir'), config.get('tool-setting').get('public_dir'), config)
-        generate_news_html(config.get('tool-setting').get('news_dir'), config.get('tool-setting').get('news_template_path'), config.get('tool-setting').get('news_output_path'))
+        tool_setting = config.get('tool-setting', {})
+        if isinstance(tool_setting, dict):
+            required_keys = ['sourceDirPath', 'publicDirPath', 'template_dir', 'img_dir', 'contentDirPath', 'news_dir', 'templateNewsFile', 'news_outputPath']
+            missing_keys = [key for key in required_keys if not tool_setting.get(key)]
+            if missing_keys:
+                sys.exit(1)
+
+            copySourceToPublic(tool_setting['sourceDirPath'], tool_setting['publicDirPath'], tool_setting['template_dir'])
+            copyImageToPublic(tool_setting['img_dir'], tool_setting['publicDirPath'])
+            initDir(tool_setting['contentDirPath'], tool_setting['publicDirPath'], config)
+            generateNewsFile(tool_setting['news_dir'], tool_setting['templateNewsFile'], tool_setting['news_outputPath'])
+        else:
+            sys.exit(1)
         end_time = time.time()
         print(f"[ T* ] : Total time taken {(end_time - start_time) * 1000:.2f} ms")
         print("[ T* ] : " + ", ".join(time_total))
-
-    args = []
-    date = ''
-    args_gen = ['--g', 'generate', 'gen']
-    args_new = ['--n', 'new']
+    
+    args: List[str] = []
+    date = ""
+    args_gen = ["--g", "generate", "gen"]
+    args_new = ["--n", "new"]
 
     for i in range(len(sys.argv)):
         args.append(sys.argv[i])
-    
-    if len(args) < 2 or args[1] not in args_gen and args[1] not in args_new and not "rconf":
-        print(f"IT Club SSG by zvlfahmi, slvr.12\n\nUsage:\n  python buildsite.py generate\n  python buildsite.py new [folder] [filename]\n\nOptions:\n  generate, : Generate the static site from markdown files. \n  --g, gen\n  new, --n  : Create a new markdown file with the specified filename.")
+
+    if (
+        len(args) < 2
+        or args[1] not in args_gen
+        and args[1] not in args_new
+        and not "rconf"
+    ):
         sys.exit()
-        
+
     if args[1] in args_gen:
-        generate()
-    
-    if args[1] == 'rconf' :
+        generateSite()
+
+    if args[1] == "rconf":
         print(config)
-        # debugging purposes
 
     elif args[1] in args_new:
-        
         folder = args[2]
 
         if len(args) > 3:
             title = args[3]
             date = ""
 
-            if config.get('file-with-date'):
-                date = datetime.now().strftime('%Y%m%d') + '-'
-            
-            if folder.endswith('/'):
+            config = readConfig("./config.txt")
+
+            if config.get("file-with-date"):
+                date = datetime.now().strftime("%Y%m%d") + "-"
+
+            if folder.endswith("/"):
                 folder = folder[:-1]
 
-            if title.endswith('.md'):
+            if title.endswith(".md"):
                 title = title[:-3]
 
-            md_file_path = os.path.join(folder, date + title)
+            markdownPath = os.path.join(folder, date + title)
 
-            create_md_file(md_file_path, title)
+            createMarkdown(markdownPath, title)
 
         else:
-            title = folder.split('/')[-1]
-            create_md_file(folder, title)
+            title = folder.split("/")[-1]
+            createMarkdown(folder, title)
