@@ -10,4 +10,6 @@ buildsiteold.py
 configprod.toml
 *prod/
 template/design/*
+.*
+__pycache__
 !template/design/newsitc.html
