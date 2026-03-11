@@ -3,12 +3,10 @@ Static Site Generator tailored for IT Club MAN's Website<br>
 
 ## Requirement :
 - Python 3
-- Any OS that is supported by Python
+- UNIX or UNIX-like Operating System (not tested on Windows yet)
 
 ## Dependencies :
-- markdown
-- toml
-- markdown_del_ins
+markdown, markdown_del_ins
 
 ## Installation : 
 Install Python, check Python website for installation guide on your Operating System.
@@ -21,14 +19,14 @@ $ cd static-site-generator
 ```
 
 To install the dependency, run this command.
-NOTE: If you need to, you can create virtual environment for your Python installation. Arch Linux gets mad if you don't do this though..
+NOTE: If you need to, you can create virtual environment for your Python installation.
 
 ```
 $ pip install -r requirements.txt
 ```
 
 ## Usage:
-To generate markdown file inside `content` folder
+To generate markdown file inside `content` folder <br>
 
 ```
 $ python buildsite.py new <filename>.md
@@ -70,25 +68,15 @@ To generate the HTML file
 $ python buildsite.py generate
 ```
 
+This will convert all markdown file under `content` folder and also copy CSS, JS or whatever in `src` then put them inside `public` folder
+
+Note: *ALL files* under `src` will be put in the root folder of `public` and oh ANY FILE WITH EXTENSION OTHER THAN .md WILL BE IGNORED AND NOT COPIED OVER TO `public`
+
 ## Configuration
 
-```
-[metadata]
-    Title = "IT Club"
-    description = "" 
-    # as of right now, description does nothing
-
-[tool-setting]
-    file-with-date = 1
-    content_dir = "./content"
-    public_dir = "./public"
-    src_dir = "./src"
-    img_dir = "./img"
-    template_dir = "./template/design"
-    news_dir = "./public/content/news"
-    news_template_path = "./template/news.html"
-    news_output_path = "./public/content/news.html"
-```
+Inside `config.txt`, you can set `Title` and `file-with-date`.<br>
+`file-with-date` will add date to the newly made markdown file, just an experiment really<br>
+I mean, you could just modify the template html inside *template* and `buildsite.py` to add more config
 
 ## File structure
 
@@ -119,9 +107,14 @@ Though not uploaded to this repository, you should add these folder:
 └── readme.md
 ```
 
-- `public` folder is where all the converted markdown in `content`, assets in `src`, and images in `img` will go after running the `buildsite.py generate`
-- `img` contains image
-- `template` contains template to generate the site, it also contains the theme. If you don't provide any index, stylesheet, and script in `src` then it's going to pull template from `template/design` instead
-- `src` contains source if you're writing the index.html, script or stylesheet yourself.
+- `public` folder is where all converted markdown in `content`, assets in `src`, and images in `img` will 
+reside after running the `buildsite.py generate`
+- `img` folder is where the images are stored, when running the script it will be copied to `./public/img/`. 
+- `template` folder is where the templates are located like the base, head, body, and also if `src` don't have `index.html`, it will copy `index.html`, stylesheet, and script from `template` instead
+- `src` folder is where the index HTMl, script, and stylesheet are, this folder will be copied to `./public/` (MANDATORY!)
 - `content` folder is where the markdowns are stored.
 
+Though i just explained that `src` is for storing script and styesheet, i use it to store the base of my website such as
+`index.html`, `news.html`, `about.html` because it has different layout than the template.
+
+also, if you make `./content/content/news` folder, it will make a special file `news.html` in `./public/content` after you generate the site and its content will be listed in `news.html`

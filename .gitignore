@@ -7,3 +7,7 @@ img/*
 .gitmodules
 backup
 buildsiteold.py
+configprod.toml
+*prod/
+template/design/*
+!template/design/newsitc.html

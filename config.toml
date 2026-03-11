@@ -1,14 +1,24 @@
 [metadata]
     Title = "IT Club"
-    description = "" 
+    description = ""
+    site_url = "https://itclubmanmet.github.io"
+    font_stylesheet_url = "https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap"
+    navbar_template_path = "template/design/navbar.html"
 
 [tool-setting]
     file-with-date = 1
-    contentDirPath = "./content"
-    publicDirPath = "./public"
-    sourceDirPath = "./src"
+    content_dir = "./content"
+    public_dir = "./public"
+    src_dir = "./src"
     img_dir = "./img"
     template_dir = "./template/design"
     news_dir = "./public/content/news"
-    templateNewsFile = "./template/news.html"
-    news_outputPath = "./public/content/news.html"
+    news_template_path = "./template/design/newsitc.html"
+    output_path = "./public/content/index.html"
+    debugMode = 1
+    SELinux = true
+    image_jpeg_quality = 70
+    image_png_compress_level = 8
+    image_webp_quality = 70
+    thumbnail_webp_quality = 45
+    write_apache_cache_headers = 0
