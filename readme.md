@@ -73,10 +73,6 @@ To generate the HTML file
 python buildsite.py generate
 ```
 
-This will convert all markdown file under `content` folder and also copy CSS, JS or whatever in `src` then put them inside `public` folder
-
-Note: *ALL files* under `src` will be put in the root folder of `public` and oh ANY FILE WITH EXTENSION OTHER THAN .md WILL BE IGNORED AND NOT COPIED OVER TO `public`
-
 ## Configuration
 
 ```toml
@@ -106,6 +102,32 @@ Note: *ALL files* under `src` will be put in the root folder of `public` and oh 
     write_apache_cache_headers = 0
 
 ````
+### [metadata]
+
+1. `Title`, as the name suggest this is the Title of the website. This will show up in the Tab Title.
+2. `description`, fallback description if the content description not available.
+3. `site_url`, site root URL
+4. `font_stylesheet_url`, global font used for the website
+5. `navbar_template_path`, navbar template location
+
+### [tool-setting]
+
+1. `file-with-date` (boolean): when making new markdown content it will put the creation date (not published date) on the filename 
+2. `content_dir` (string): markdown files folder location
+3. `public_dir` (string): output folder path, can be anything 
+4. `src_dir` (string): source file folder path [deprecated]
+5. `img_dir` (string): image folder path
+6. `template_dir` (string): website template folder path 
+7. `news_dir` (string): news/content folder output path (usually under `public_dir`)
+8. `news_template_path` (string): news/content template path 
+9. `output_path` (string): news/content HTML file output path (usually under `public_dir`)
+10. `debugMode` (boolean): enable verbose info [deprecated]
+11. `SELinux` (boolean): add proper SELinux tag for SELinux enabled (or perhaps AppArmor too) distro
+12. `image_jpeg_quality` (integer): JPEG Quality
+13. `image_png_compress_level` (integer): PNG Compress level
+14. `image_webp_quality` (integer): WebP Quality
+15. `thumbnail_webp_quality` (integer): WebP Quality for Thumbnail
+16. `write_apache_cache_headers` (boolean): Set longer caching for Apache webserver
 
 ## File structure
 
@@ -121,17 +143,17 @@ Though not uploaded to this repository, you should add these folder:
 ├── src
 ├── img
 ├── template
-│   ├── design
-│   │   ├── index.html
-│   │   ├── style.css
-│   │   └── script.js
-│   ├── base.html
-│   ├── body.html
-│   ├── footer.html
-│   ├── header.html
-│   ├── head.html
-│   ├── news.html
-│   └── script.html
+│  ├── design
+│  │   ├── index.html
+│  │   ├── style.css
+│  │   └── script.js
+│  ├── base.html
+│  ├── body.html
+│  ├── footer.html
+│  ├── header.html
+│  ├── head.html
+│  ├── news.html
+│  └── script.html
 ├── requirements.txt
 └── readme.md
 ```
@@ -157,6 +179,8 @@ This used to be done in `src` but it was deprecated in favor of `template/design
 ### d. Image
 
 Images can be put into `img` directory, and it will be copied to `public_dir` as `public_dir/img`. While trying to embed the image, you can do `![comment](/img/file.jpg)` but this do some weird stuff with VS Code Live Server Extension
+
+> Adding comment might break things, let me know if it broke something
 
 ### e. Template
 

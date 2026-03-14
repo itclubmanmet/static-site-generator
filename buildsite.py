@@ -93,9 +93,7 @@ def parseInt(
     return parsed
 
 
-def getConfigStr(
-    config: dict[str, str | int | bool], key: str, default: str = ""
-):
+def getConfigStr(config: dict[str, str | int | bool], key: str, default: str = ""):
     value = config.get(key)
     return value if isinstance(value, str) else default
 
@@ -406,7 +404,7 @@ def processMarkdown(
 
     with open("template/head.html", "r", encoding="utf-8") as head_file:
         head_content = head_file.read()
-        title = extractFirstH1Title(htmlContent) or getConfigStr(config, "Title", "")
+        title = getConfigStr(config, "Title", extractFirstH1Title(htmlContent))
         # Use the first image source for metadata and h1 hero if available.
         first_image_src = extractFirstImageSrc(htmlContent)
         meta_image = first_image_src or getConfigStr(
