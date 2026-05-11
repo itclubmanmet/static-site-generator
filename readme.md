@@ -1,4 +1,4 @@
-# IT Club's Static Site Generator
+# IT Club's Static Site Generator Refresh
 Static Site Generator tailored for IT Club MAN's Website<br>
 Created by IT Club (2024-2025) Programming Division [Zulfahmi Azka](https://github.com/zvlfahmi) and Hasan Ibnu (slvr.12)
 
@@ -23,7 +23,7 @@ cd static-site-generator
 
 To install the dependency, run this command.
 
-> Best Practice: generate virtual environment with `python -m venv env` to seperate the system python package with this project package. Arch Linux doesn't like when you use `pip` without virtual environment
+> Best Practice: generate virtual environment with `python -m venv env` to seperate the system python package with this project package. I found few distros like Arch Linux doesn't like when you use `pip` without virtual environment
 
 ```sh
 pip install -r requirements.txt
@@ -34,7 +34,7 @@ pip install -r requirements.txt
 To generate markdown file inside `content` folder
 
 ```sh
-python buildsite.py new <filename>.md
+python main.py new <filename>.md
 ```
 
 This will create a file under `content` folder
@@ -48,7 +48,7 @@ This will create a file under `content` folder
 You can also make a file inside a folder by adding path to that file
 
 ```sh
-python buildsite.py new <folder> <filename>.md
+python main.py new <folder> <filename>.md
 ```
 
 This will create file named `<filename>.md` inside folder `<folder>`
@@ -63,14 +63,17 @@ This will create file named `<filename>.md` inside folder `<folder>`
 By default, newly made markdown file will contain the following
 
 ```md
-# { filename }
-### { Timestamp } 
+[metastart]
+title: { filename }
+timestamp: { Timestamp }
+categories: Uncategorized
+[metaend] 
 ```
 
 To generate the HTML file 
 
 ```sh
-python buildsite.py generate
+python main.py generate
 ```
 
 ## Configuration
